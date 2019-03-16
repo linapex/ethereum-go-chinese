@@ -1,0 +1,96 @@
+
+//<developer>
+//    <name>linapex 曹一峰</name>
+//    <email>linapex@163.com</email>
+//    <wx>superexc</wx>
+//    <qqgroup>128148617</qqgroup>
+//    <url>https://jsq.ink</url>
+//    <role>pku engineer</role>
+//    <date>2019-03-16 19:16:42</date>
+//</624450108632600576>
+
+
+/*
+包RPC提供通过网络访问对象的导出方法的权限
+或其他I/O连接。创建服务器实例后，可以注册对象，
+使其从外部可见。遵循特定的导出方法
+可以远程调用约定。它还支持发布/订阅
+模式。
+
+满足以下条件的方法可用于远程访问：
+ -必须导出对象
+ -必须导出方法
+ -方法返回0、1（响应或错误）或2（响应和错误）值
+ —方法参数必须导出或内置类型
+ -方法返回值必须导出或内置类型
+
+示例方法：
+ func（s*calcservice）add（a，b int）（int，error）
+
+当返回的错误不是nil时，将忽略返回的整数，错误为
+发送回客户端。否则，返回的整数将被发送回客户端。
+
+接受指针值作为参数支持可选参数。例如。
+如果我们想在一个可选的有限域中做加法，我们可以接受一个mod
+参数作为指针值。
+
+ func（s*calservice）add（a，b int，mod*int）（int，错误）
+
+可以使用2个整数和一个空值作为第三个参数调用此rpc方法。
+在这种情况下，mod参数将为零。或者可以用3个整数来调用，
+在这种情况下，mod将指向给定的第三个参数。因为可选
+参数是rpc包还将接受2个整数作为
+争论。它将把mod参数作为nil传递给rpc方法。
+
+服务器提供了接受ServerCodec实例的servedec方法。它将
+从编解码器读取请求，处理请求并将响应发送回
+使用编解码器的客户端。服务器可以同时执行请求。响应
+可以按顺序发送回客户端。
+
+使用JSON编解码器的示例服务器：
+ 类型计算器服务结构
+
+ func（s*计算器服务）添加（a，b int）int
+ 返回A+B
+ }
+
+ func（s*calculatorservice）div（a，b int）（int，error）
+ 如果B=＝0 {
+  返回0，errors.new（“被零除”）。
+ }
+ 返回A/B，NIL
+ }
+
+ 计算器：=新建（CalculatorService）
+ 服务器：=newserver（）
+ server.registername（“计算器”，计算器）
+
+ l，：=net.listenunix（“unix”，&net.unixaddr net:“unix”，name:“/tmp/calculator.sock”）
+ 对于{
+ c，：=l.acceptUnix（）。
+ 编解码器：=v2.newjsoncodec（c）
+ go server.servedec（编解码器）
+ }
+
+包还通过使用订阅支持发布订阅模式。
+被视为符合通知条件的方法必须满足以下条件：
+ -必须导出对象
+ -必须导出方法
+ -第一个方法参数类型必须是Context.Context
+ —方法参数必须导出或内置类型
+ -方法必须返回元组订阅，错误
+
+示例方法：
+ func（s*blockchainservice）newblock（ctx context.context）（订阅，错误）
+  …
+ }
+
+订阅在以下情况下被删除：
+ -用户发送取消订阅请求
+ -用于创建订阅的连接已关闭。这可以启动
+   通过客户端和服务器。服务器将在发生写入错误或
+   缓冲通知队列太大。
+**/
+
+package rpc
+
